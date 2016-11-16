@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <string.h>
 #include <fs_stub/fs_stub.h>
 
 #define ASSERT_TRUE(expr) \
