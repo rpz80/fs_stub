@@ -4,7 +4,7 @@ Might be used to emulate file system sructure. I use it for testing purposes. Th
 
 ## Sample usage
 ``` C
-// create root ('/' ) folder first
+// create root ('/') folder first
 struct FsStubNode *top = fsStubCreateTopLevel(); 
 struct FsStubNode *bb;
 struct FsStubNode *subPath2;
