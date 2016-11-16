@@ -31,5 +31,5 @@ struct FsStubNode *FsStubNode_add(
 
 struct FsStubNode *FsStubNode_find(struct FsStubNode *topLevelNode, const char *path);
 int FsStubNode_rename(struct FsStubNode *fsNode, const char *newName);
-int FsStubNode_remove(struct FsStubNode *fsNode);
+void FsStubNode_remove(struct FsStubNode *fsNode);
 
