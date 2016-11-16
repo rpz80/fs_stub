@@ -29,6 +29,11 @@ static void test1()
     FsStubNode_add(top, "path2/subpath2/subfile1", file, 660, 0);
     subPath2 = FsStubNode_find(top, "path2/subpath2");
 
+    FsStubNode_add(top, "aa/cc/gg", dir, 777, 0);
+    ASSERT_TRUE(FsStubNode_find(top, "/aa/cc/gg") != NULL);
+    ASSERT_TRUE(FsStubNode_find(top, "/aa/cc/gg")->type == file);
+    ASSERT_TRUE(FsStubNode_find(top, "/aa/cc/gg")->mask == 660);
+
     ASSERT_TRUE(nn);
     ASSERT_TRUE(strcmp(nn->name, "nn") == 0);
     ASSERT_TRUE(strcmp(nn->prev->name, "ff") == 0);
