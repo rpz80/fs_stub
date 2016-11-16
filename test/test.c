@@ -48,6 +48,10 @@ static void test1()
     ASSERT_TRUE(subPath2->type == dir);
     ASSERT_TRUE(strcmp(subPath2->name, "subpath2") == 0);
 
+    FsStubNode_rename(nn, "NewNNName");
+    ASSERT_TRUE(FsStubNode_find(top, "/aa/cc/nn") == NULL);
+    ASSERT_TRUE(strcmp(FsStubNode_find(top, "/aa/cc/NewNNName")->name, "NewNNName" ) == 0);
+
     FsStubNode_remove(FsStubNode_find(top, "path2/subpath2"));
 
     ASSERT_TRUE(FsStubNode_find(top, "path2/subpath2") == NULL);

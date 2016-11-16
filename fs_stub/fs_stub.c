@@ -240,12 +240,19 @@ void FsStubNode_remove(struct FsStubNode *fsNode)
 {
     struct FsStubNode *curNode, *tmp;
 
-    for (curNode = fsNode->child; curNode; )
+    curNode = fsNode->child;
+    if (curNode)
+        fsNode->child = NULL;
+
+    while (curNode)
     {
         tmp = curNode;
         curNode = curNode->next;
         FsStubNode_remove(tmp);
     }
+
+    if (fsNode->parent)
+        fsNode->parent->child = NULL;
 
     free(fsNode->name);
     free(fsNode);
