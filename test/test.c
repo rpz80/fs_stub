@@ -40,8 +40,9 @@ static void test1()
     ASSERT_TRUE(strcmp(nn->name, "nn") == 0);
     ASSERT_TRUE(strcmp(nn->prev->name, "ff") == 0);
     ASSERT_TRUE(strcmp(nn->next->name, "gg") == 0);
-    ASSERT_TRUE(bb->parent->type == dir);
 
+    ASSERT_TRUE(strcmp(FsStubNode_find(bb, "gg")->name, "gg" ) == 0);
+    ASSERT_TRUE(bb->parent->type == dir);
     ASSERT_TRUE(bb->child->type == file);
     ASSERT_TRUE(strcmp(bb->parent->name, "aa") == 0);
     ASSERT_TRUE(bb->parent->type == dir);
