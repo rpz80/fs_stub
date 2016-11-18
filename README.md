@@ -28,4 +28,14 @@ FsStubNode_rename(nn, "NewNNName");
 FsStubNode_remove(FsStubNode_find(top, "path2/subpath2"));
 
 FsStubNode_remove(top);
+
+void traverseDFS(struct FsStubNode *top)
+{
+    struct FsStubNode *child;
+    
+    for (child = top->child; child; child = child->next)
+        traverseDFS(child);
+        
+    printf("%d %lld %s %s\n", top->mask, top->size, (top->type == dir ? "Dir" : "File"), top->name);
+}
 ```
