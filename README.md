@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/rpz80/fs_stub.svg?branch=master)](https://travis-ci.org/rpz80/fs_stub)
 # Fs stub library
-Might be used to emulate file system sructure. I use it for testing purposes. There are no correctenss checks in a sense that you can create file, which has another file (not directory) as parent and so on. Refer to `fs_stub.h` for interface.
+Might be used to emulate file system sructure for testing purposes. There are no correctenss checks in a sense that you can create file, which has another file (not directory) as parent and so on. Refer to `fs_stub.h` for interface.
 
 ## Sample usage
 ``` C
