@@ -8,8 +8,8 @@
     do { \
         assert((expr)); \
         if (!(expr)) {\
-            exit(-1); \
             fprintf(stderr, "%s:%d:%s. ASSERT_TRUE '%s' failed\n", __FILE__, __LINE__, __PRETTY_FUNCTION__, #expr); \
+            exit(-1); \
         } \
     } while (0)
 
@@ -68,8 +68,129 @@ static void test1()
     FsStubNode_remove(top);
 }
 
+static char *memdup(const void *src, int srcLen)
+{
+    char *dst = malloc(srcLen + 1);
+    memcpy(dst, src, srcLen);
+    dst[srcLen] = '\0';
+
+    return dst;
+}
+
+struct TestNode 
+{
+    char *name;
+    struct TestNode *next;
+};
+
+struct TestNode *TestNode_insertBefore(
+    struct TestNode *currentNode, 
+    const char *name)
+{
+    struct TestNode *newNode;
+
+    newNode = malloc(sizeof(*newNode));
+    newNode->name = memdup(name, strlen(name));
+    if (currentNode)
+        newNode->next = currentNode;
+    else
+        newNode->next = NULL;
+
+    return newNode;
+}
+
+int TestNode_exists(struct TestNode *root, const char *name)
+{
+    for ( ; root; root = root->next)
+    {
+        if (strcmp(root->name, name) == 0)
+            return 1;
+    }
+
+    return 0;
+}
+
+void TestNode_forEach(
+    struct TestNode *root, 
+    void *ctx,
+    void (*action)(void *, struct TestNode *))
+{
+    for (; root; root = root->next)
+        action(ctx, root);
+}
+
+void TestNode_freeRecursive(struct TestNode *head)
+{
+    struct TestNode *tmp;
+
+    while (head)
+    {
+        tmp = head->next;
+        free(head->name);
+        free(head);
+        head = tmp;
+    }
+}
+
+static void addNodeNameToTestList(void *ctx, struct FsStubNode *node)
+{
+    struct TestNode **testNode = (struct TestNode **)ctx;
+
+    *testNode = TestNode_insertBefore(*testNode, node->name); 
+}
+
+static void printTestNodeAction(void *ctx, struct TestNode *node)
+{
+    printf("%s\n", node->name);
+}
+
+static int existsInStringList(const char *pattern, const char **stringList)
+{
+    const char **cur;
+
+    for (cur = stringList; *cur; ++cur)
+        if (strstr(*cur, pattern))
+            return 1;
+
+    return 0;
+}
+
+static void assertNameIsInPathsAction(void *ctx, struct TestNode *node)
+{
+    const char **stringList = (const char **)ctx;
+
+    ASSERT_TRUE(existsInStringList(node->name, stringList));
+}
+
+static void forEachNodeTest()
+{
+    struct FsStubNode *top = fsStubCreateTopLevel();
+    const char* paths[] = {
+        "/some/path/file1",
+        "/some/path/file1",
+        "/some/path/file3",
+        "/some/path/subpath/file4",
+        NULL,
+    };
+    const char **currentPath;
+    struct TestNode *testHead;
+
+    for (currentPath = paths; *currentPath; currentPath++)
+        FsStubNode_add(top, *currentPath, file, 0600, 111);
+
+    testHead = TestNode_insertBefore(NULL, "");
+    FsStubNode_forEach(top, &testHead, addNodeNameToTestList);
+
+    TestNode_forEach(testHead, paths, assertNameIsInPathsAction);
+    TestNode_forEach(testHead, NULL, printTestNodeAction);
+
+    FsStubNode_remove(top);
+    TestNode_freeRecursive(testHead);
+}
+
 int main()
 {
     test1();
+    forEachNodeTest();
     return 0;
 }
