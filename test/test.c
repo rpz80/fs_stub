@@ -188,9 +188,29 @@ static void forEachNodeTest()
     TestNode_freeRecursive(testHead);
 }
 
+static void removeTest()
+{
+    struct FsStubNode *top = fsStubCreateTopLevel();
+    struct FsStubNode* cur;
+    
+    FsStubNode_add(top, "some/path/1", file, 660, 1);
+    FsStubNode_add(top, "some/path/2", file, 660, 1);
+    FsStubNode_add(top, "some/path/3", file, 660, 1);
+    FsStubNode_add(top, "some/path/4", file, 660, 1);
+    
+    FsStubNode_remove(top, "some/path/1");
+    ASSERT_TRUE(FsStubNode_find(top, "some/path/2"));
+    ASSERT_TRUE(FsStubNode_find(top, "some/path/4"));
+    
+    FsStubNode_remove(top, "some/path/3");
+    ASSERT_TRUE(FsStubNode_find(top, "some/path/2"));
+    ASSERT_TRUE(FsStubNode_find(top, "some/path/4"));
+}
+
 int main()
 {
     test1();
     forEachNodeTest();
+    removeTest();
     return 0;
 }
