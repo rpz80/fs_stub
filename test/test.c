@@ -198,11 +198,11 @@ static void removeTest()
     FsStubNode_add(top, "some/path/3", file, 660, 1);
     FsStubNode_add(top, "some/path/4", file, 660, 1);
     
-    FsStubNode_remove(top, FsStubNode_find(top, "some/path/1"));
+    FsStubNode_remove(FsStubNode_find(top, "some/path/1"));
     ASSERT_TRUE(FsStubNode_find(top, "some/path/2"));
     ASSERT_TRUE(FsStubNode_find(top, "some/path/4"));
     
-    FsStubNode_remove(top, FsStubNode_find(top, "some/path/3"));
+    FsStubNode_remove(FsStubNode_find(top, "some/path/3"));
     ASSERT_TRUE(FsStubNode_find(top, "some/path/2"));
     ASSERT_TRUE(FsStubNode_find(top, "some/path/4"));
 }
