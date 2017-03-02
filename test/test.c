@@ -202,7 +202,7 @@ static void removeTest()
     ASSERT_TRUE(FsStubNode_find(top, "some/path/2"));
     ASSERT_TRUE(FsStubNode_find(top, "some/path/4"));
     
-    FsStubNode_remove(top, FsStubNode_find("some/path/3"));
+    FsStubNode_remove(top, FsStubNode_find(top, "some/path/3"));
     ASSERT_TRUE(FsStubNode_find(top, "some/path/2"));
     ASSERT_TRUE(FsStubNode_find(top, "some/path/4"));
 }
