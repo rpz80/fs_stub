@@ -205,6 +205,29 @@ static void removeTest()
     FsStubNode_remove(FsStubNode_find(top, "some/path/3"));
     ASSERT_TRUE(FsStubNode_find(top, "some/path/2"));
     ASSERT_TRUE(FsStubNode_find(top, "some/path/4"));
+
+    FsStubNode_remove(top);
+}
+
+static void fullPathTest()
+{
+
+    struct FsStubNode *top = fsStubCreateTopLevel();
+    struct FsStubNode* cur;
+    char smallBuf[1];
+    char largeBuf[128];
+    const char *path = "/some/path/1";
+
+    memset(smallBuf, '\0', sizeof smallBuf);
+    memset(largeBuf, '\0', sizeof largeBuf);
+    
+    cur = FsStubNode_add(top, path, file, 660, 1);
+    ASSERT_TRUE(FsStubNode_fullPath(cur, smallBuf, sizeof smallBuf) == strlen(path) + 1);
+
+    FsStubNode_fullPath(cur, largeBuf, sizeof largeBuf);
+    ASSERT_TRUE(strcmp(largeBuf, path) == 0);
+
+    FsStubNode_remove(top);
 }
 
 int main()
@@ -212,5 +235,7 @@ int main()
     test1();
     forEachNodeTest();
     removeTest();
+    fullPathTest();
+
     return 0;
 }
